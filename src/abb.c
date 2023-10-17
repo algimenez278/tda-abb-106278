@@ -52,32 +52,83 @@ abb_t *insertar_nodo_rec(nodo_abb_t *nodo_actual, abb_t *arbol, void* elemento, 
 	return insertar_nodo_rec(nodo_actual, arbol, elemento, DERECHA);
 }
 
+////todo lo de quitar
+void *quitar_nodo_hoja(nodo_abb_t *nodo_actual, nodo_abb_t *nodo_padre, abb_t *arbol){
 
-void *quitar_nodo_rec(nodo_abb_t *nodo_actual, nodo_abb_t *nodo_padre, abb_t *arbol, void* elemento){
+	void *elemento_eliminado= nodo_actual->elemento;
+
+	free(nodo_actual);
+	arbol->tamanio--;
+
+	if(nodo_padre->izquierda == nodo_actual){
+		nodo_padre->izquierda= NULL;
+	}
+	else{
+		nodo_padre->derecha= NULL;
 	
-	if(nodo_actual == NULL){
-		return NULL;
 	}
-
-	///si es hoja
-	if(arbol->comparador(elemento, nodo_actual->elemento) == 0){
-		if(nodo_actual->izquierda == nodo_actual->derecha == NULL){
-			void *elemento_eliminado= nodo_actual->elemento;
-			free(nodo_actual->elemento);
-			free(nodo_actual);
-			arbol->tamanio--;
-			return elemento;
-		}
-	}
-
-	if(arbol->comparador(elemento, nodo_actual->elemento) < 0){
-		return quitar_nodo_rec(nodo_actual->izquierda, arbol, elemento);
-	}
-
-	return quitar_nodo_rec(nodo_actual->derecha, arbol, elemento);
+	return elemento_eliminado;
 }
 
 
+////con un hijo
+ 
+void* quitar_nodo_con_un_hijo(nodo_abb_t *nodo_actual, nodo_abb_t *nodo_padre, abb_t *arbol){
+	
+	nodo_abb_t *aux_sig;
+
+	if(nodo_actual->izquierda){
+		aux_sig= nodo_actual->izquierda;
+	}
+	else{
+		aux_sig= nodo_actual->derecha;
+	}
+
+	if(nodo_padre->derecha == nodo_actual){
+		nodo_padre->derecha= aux_sig;
+	}
+	else{
+		nodo_padre->izquierda= aux_sig;
+	}
+
+	void *elemento_eliminado= nodo_actual->elemento;
+	free(nodo_actual);
+	arbol->tamanio--;
+	return elemento_eliminado;	
+}
+
+
+
+void *quitar_nodo_rec(nodo_abb_t *nodo_actual, nodo_abb_t *nodo_padre, abb_t *arbol, void* elemento){
+	
+	if(arbol== NULL || nodo_actual == NULL || nodo_padre == NULL){
+		return NULL;
+	}
+
+	if(arbol->comparador(elemento, nodo_actual->elemento) == 0){
+
+		if(nodo_actual->izquierda == NULL && nodo_actual->derecha == NULL){
+			return quitar_nodo_hoja(nodo_actual, nodo_padre, arbol);
+		}
+
+			//SI TIENE 2 HIJOS
+		if(nodo_actual->izquierda != NULL && nodo_actual->derecha != NULL){
+			//// aca veré que hacer 
+			//return elemento_eliminado;
+		}
+
+		//si tiene solo un hijo
+		return quitar_nodo_con_un_hijo(nodo_actual, nodo_padre, arbol);
+		///
+	}
+
+	if(arbol->comparador(elemento, nodo_actual->elemento) < 0){
+
+		return quitar_nodo_rec(nodo_actual->izquierda, nodo_actual, arbol, elemento);
+	}
+
+	return quitar_nodo_rec(nodo_actual->derecha, nodo_actual, arbol, elemento);
+}
 
 void *buscar_nodo_rec(nodo_abb_t *nodo_actual, abb_t *arbol, void* elemento){
 
@@ -100,7 +151,7 @@ void *buscar_nodo_rec(nodo_abb_t *nodo_actual, abb_t *arbol, void* elemento){
 
 
 
-///////////////
+/////////////// las de destruir nodo rec /////
 
 void abb_destruir_nodo(abb_t *arbol, nodo_abb_t* nodo){
 
@@ -172,10 +223,42 @@ abb_t *abb_insertar(abb_t *arbol, void *elemento)
 
 void *abb_quitar(abb_t *arbol, void *elemento)
 {
-	if( arbol== NULL){
+	if(arbol == NULL || arbol->nodo_raiz == NULL){
 		return NULL;
 	}
-	return elemento;
+
+	if(arbol->comparador(elemento, arbol->nodo_raiz->elemento) == 0){
+
+		if(arbol->nodo_raiz->izquierda == NULL && arbol->nodo_raiz->derecha == NULL){
+			void *elemento_eliminado= arbol->nodo_raiz->elemento;
+			free(arbol->nodo_raiz);
+			arbol->tamanio--;
+			return elemento_eliminado;
+		}
+
+			//SI TIENE 2 HIJOS
+		if(arbol->nodo_raiz->izquierda != NULL && arbol->nodo_raiz->derecha != NULL){
+			//// aca veré que hacer 
+			return NULL;
+		}
+
+		void *elemento_eliminado= arbol->nodo_raiz->elemento;
+
+	//ordenar todo el arbolito rec
+
+		free(arbol->nodo_raiz);
+		arbol->tamanio--;
+		return elemento_eliminado;
+		/////
+	}
+
+	if(arbol->comparador(elemento, arbol->nodo_raiz->elemento) < 0){
+
+		return quitar_nodo_rec(arbol->nodo_raiz->izquierda, arbol->nodo_raiz, arbol, elemento);
+	}
+
+	return quitar_nodo_rec(arbol->nodo_raiz->derecha, arbol->nodo_raiz, arbol, elemento);
+
 }
 
 void *abb_buscar(abb_t *arbol, void *elemento)

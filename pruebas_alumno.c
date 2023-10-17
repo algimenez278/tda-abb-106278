@@ -61,10 +61,18 @@ int main()
 	*aux= 35;
 	pa2m_afirmar(abb_buscar(arbolito, aux) == e5, "encontraste un elemento!");
 
+	int *chau= crear_elemento(0);
+	chau= abb_quitar(arbolito, aux);
+	printf("%i", *chau);
+	pa2m_afirmar(abb_quitar(arbolito, aux) == e5, "encontraste un elemento!");
 
-//esto para no perder memoria en nada, piolita
+
+
+
+//esto para no perder memoria en nada :)
 	abb_destruir_todo(arbolito, destruir_elemento);
 	destruir_elemento(aux);
+	destruir_elemento(chau);
 
 
 
