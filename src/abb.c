@@ -52,83 +52,67 @@ abb_t *insertar_nodo_rec(nodo_abb_t *nodo_actual, abb_t *arbol, void* elemento, 
 	return insertar_nodo_rec(nodo_actual, arbol, elemento, DERECHA);
 }
 
-////todo lo de quitar
-void *quitar_nodo_hoja(nodo_abb_t *nodo_actual, nodo_abb_t *nodo_padre, abb_t *arbol){
+nodo_abb_t* extraer_predecesor(nodo_abb_t *nodo){
 
-	void *elemento_eliminado= nodo_actual->elemento;
-
-	free(nodo_actual);
-	arbol->tamanio--;
-
-	if(nodo_padre->izquierda == nodo_actual){
-		nodo_padre->izquierda= NULL;
+	nodo_abb_t *predecesor= nodo->izquierda;
+	while(predecesor->derecha){
+		predecesor= predecesor->derecha;
 	}
-	else{
-		nodo_padre->derecha= NULL;
-	
-	}
-	return elemento_eliminado;
+	return predecesor;
+
 }
 
+void *quitar_nodo_rec(nodo_abb_t *nodo, abb_t *arbol, void* elemento, void** elemento_eliminado){
 
-////con un hijo
- 
-void* quitar_nodo_con_un_hijo(nodo_abb_t *nodo_actual, nodo_abb_t *nodo_padre, abb_t *arbol){
-	
-	nodo_abb_t *aux_sig;
-
-	if(nodo_actual->izquierda){
-		aux_sig= nodo_actual->izquierda;
-	}
-	else{
-		aux_sig= nodo_actual->derecha;
-	}
-
-	if(nodo_padre->derecha == nodo_actual){
-		nodo_padre->derecha= aux_sig;
-	}
-	else{
-		nodo_padre->izquierda= aux_sig;
-	}
-
-	void *elemento_eliminado= nodo_actual->elemento;
-	free(nodo_actual);
-	arbol->tamanio--;
-	return elemento_eliminado;	
-}
-
-
-
-void *quitar_nodo_rec(nodo_abb_t *nodo_actual, nodo_abb_t *nodo_padre, abb_t *arbol, void* elemento){
-	
-	if(arbol== NULL || nodo_actual == NULL || nodo_padre == NULL){
+	if(arbol == NULL || nodo == NULL){
 		return NULL;
-	}
+	}	
 
-	if(arbol->comparador(elemento, nodo_actual->elemento) == 0){
+	if(arbol->comparador(elemento, nodo->elemento) == 0){
 
-		if(nodo_actual->izquierda == NULL && nodo_actual->derecha == NULL){
-			return quitar_nodo_hoja(nodo_actual, nodo_padre, arbol);
+		*elemento_eliminado= nodo->elemento;
+
+		if(nodo->izquierda!= NULL && nodo->derecha!= NULL){
+
+			nodo_abb_t* predecesor= NULL;
+			predecesor= extraer_predecesor(nodo);
+			nodo->elemento= predecesor->elemento;			
+			nodo->izquierda= quitar_nodo_rec(nodo->izquierda, arbol, predecesor->elemento, elemento_eliminado);
+			return nodo;
+		}
+		else{
+
+			nodo_abb_t* izquierda= nodo->izquierda;
+			nodo_abb_t* derecha= nodo->derecha;
+
+			free(nodo);
+			arbol->tamanio--;
+
+			if(izquierda){
+				return izquierda;
+			}
+			if(derecha){
+				return derecha;
+			}
+			return NULL;
 		}
 
-			//SI TIENE 2 HIJOS
-		if(nodo_actual->izquierda != NULL && nodo_actual->derecha != NULL){
-			//// aca veré que hacer 
-			//return elemento_eliminado;
-		}
-
-		//si tiene solo un hijo
-		return quitar_nodo_con_un_hijo(nodo_actual, nodo_padre, arbol);
-		///
 	}
 
-	if(arbol->comparador(elemento, nodo_actual->elemento) < 0){
-
-		return quitar_nodo_rec(nodo_actual->izquierda, nodo_actual, arbol, elemento);
+	else if(arbol->comparador(elemento, nodo->elemento) <0){
+		nodo->izquierda= quitar_nodo_rec(nodo->izquierda, arbol, elemento, elemento_eliminado);
 	}
 
-	return quitar_nodo_rec(nodo_actual->derecha, nodo_actual, arbol, elemento);
+	else{
+		nodo->derecha= quitar_nodo_rec(nodo->derecha, arbol, elemento, elemento_eliminado);
+	}
+
+	return nodo;
 }
+
+
+
+///////LA DE BUSCAR REC
 
 void *buscar_nodo_rec(nodo_abb_t *nodo_actual, abb_t *arbol, void* elemento){
 
@@ -227,38 +211,20 @@ void *abb_quitar(abb_t *arbol, void *elemento)
 		return NULL;
 	}
 
-	if(arbol->comparador(elemento, arbol->nodo_raiz->elemento) == 0){
+	void *elemento_eliminado= NULL;
 
-		if(arbol->nodo_raiz->izquierda == NULL && arbol->nodo_raiz->derecha == NULL){
-			void *elemento_eliminado= arbol->nodo_raiz->elemento;
-			free(arbol->nodo_raiz);
-			arbol->tamanio--;
+	if(arbol->tamanio == 1){
+		if(arbol->comparador(elemento, arbol->nodo_raiz->elemento)== 0){
+			elemento_eliminado= arbol->nodo_raiz->elemento;
+			arbol->nodo_raiz= NULL;
+			arbol->tamanio= 0;
 			return elemento_eliminado;
 		}
-
-			//SI TIENE 2 HIJOS
-		if(arbol->nodo_raiz->izquierda != NULL && arbol->nodo_raiz->derecha != NULL){
-			//// aca veré que hacer 
-			return NULL;
-		}
-
-		void *elemento_eliminado= arbol->nodo_raiz->elemento;
-
-	//ordenar todo el arbolito rec
-
-		free(arbol->nodo_raiz);
-		arbol->tamanio--;
-		return elemento_eliminado;
-		/////
 	}
 
-	if(arbol->comparador(elemento, arbol->nodo_raiz->elemento) < 0){
+	arbol->nodo_raiz= quitar_nodo_rec(arbol->nodo_raiz, arbol, elemento, &elemento_eliminado);
 
-		return quitar_nodo_rec(arbol->nodo_raiz->izquierda, arbol->nodo_raiz, arbol, elemento);
-	}
-
-	return quitar_nodo_rec(arbol->nodo_raiz->derecha, arbol->nodo_raiz, arbol, elemento);
-
+	return elemento_eliminado;
 }
 
 void *abb_buscar(abb_t *arbol, void *elemento)
@@ -307,9 +273,7 @@ void abb_destruir(abb_t *arbol)
 		free(arbol);
 		return;		
 	}
-	abb_destruir_nodo(arbol, arbol->nodo_raiz->izquierda);
-	abb_destruir_nodo(arbol, arbol->nodo_raiz->derecha);
-	free(arbol->nodo_raiz);
+	abb_destruir_nodo(arbol, arbol->nodo_raiz);
 	arbol->tamanio--;
 	free(arbol);
 }
