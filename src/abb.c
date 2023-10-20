@@ -62,7 +62,7 @@ nodo_abb_t* extraer_predecesor(nodo_abb_t *nodo){
 
 }
 
-void *quitar_nodo_rec(nodo_abb_t *nodo, abb_t *arbol, void* elemento, void** elemento_eliminado){
+void *quitar_nodo_rec(nodo_abb_t *nodo, abb_t *arbol, void* elemento, void **elemento_eliminado){
 
 	if(arbol == NULL || nodo == NULL){
 		return NULL;
@@ -70,13 +70,14 @@ void *quitar_nodo_rec(nodo_abb_t *nodo, abb_t *arbol, void* elemento, void** ele
 
 	if(arbol->comparador(elemento, nodo->elemento) == 0){
 
-		*elemento_eliminado= nodo->elemento;
+		if(elemento!= NULL){
+			*elemento_eliminado= nodo->elemento;
+		}
 
 		if(nodo->izquierda!= NULL && nodo->derecha!= NULL){
 
-			nodo_abb_t* predecesor= NULL;
-			predecesor= extraer_predecesor(nodo);
-			nodo->elemento= predecesor->elemento;			
+			nodo_abb_t* predecesor= extraer_predecesor(nodo);
+			nodo->elemento= predecesor->elemento;		
 			nodo->izquierda= quitar_nodo_rec(nodo->izquierda, arbol, predecesor->elemento, elemento_eliminado);
 			return nodo;
 		}
@@ -86,15 +87,15 @@ void *quitar_nodo_rec(nodo_abb_t *nodo, abb_t *arbol, void* elemento, void** ele
 			nodo_abb_t* derecha= nodo->derecha;
 
 			free(nodo);
+			nodo=NULL;
 			arbol->tamanio--;
 
 			if(izquierda){
 				return izquierda;
 			}
-			if(derecha){
-				return derecha;
-			}
-			return NULL;
+
+			return derecha;
+
 		}
 
 	}
@@ -163,6 +164,58 @@ void abb_destruir_todo_nodo(abb_t *arbol, void (*destructor)(void *), nodo_abb_t
 	arbol->tamanio--;
 }
 
+
+
+//////RECORRIDOS///////
+
+void abb_recorrer_inorden(nodo_abb_t *nodo, size_t *nodos_guardados, void **array, size_t tamanio){
+	
+	if(nodo == NULL || (*nodos_guardados) == tamanio){
+		return;
+	}
+
+	abb_recorrer_inorden(nodo->izquierda, nodos_guardados, array, tamanio);
+	if((*nodos_guardados) < tamanio){
+		array[*nodos_guardados]= nodo->elemento;
+		(*nodos_guardados)++;
+	}
+	abb_recorrer_inorden(nodo->derecha, nodos_guardados, array, tamanio);
+}
+
+void abb_recorrer_preorden(nodo_abb_t *nodo, size_t *nodos_guardados, void **array, size_t tamanio){
+	
+	if(nodo == NULL || (*nodos_guardados) == tamanio){
+		return;
+	}
+
+	if((*nodos_guardados) < tamanio){
+		array[*nodos_guardados]= nodo->elemento;
+		(*nodos_guardados)++;
+	}
+
+	abb_recorrer_preorden(nodo->izquierda, nodos_guardados, array, tamanio);
+
+	abb_recorrer_preorden(nodo->derecha, nodos_guardados, array, tamanio);
+	
+}
+
+void abb_recorrer_postorden(nodo_abb_t *nodo, size_t *nodos_guardados, void **array, size_t tamanio){
+	
+	if(nodo == NULL || (*nodos_guardados) == tamanio){
+		return;
+	}
+
+	abb_recorrer_postorden(nodo->izquierda, nodos_guardados, array, tamanio);
+
+	abb_recorrer_postorden(nodo->derecha, nodos_guardados, array, tamanio);
+	
+	if((*nodos_guardados) < tamanio){
+		array[*nodos_guardados]= nodo->elemento;
+		(*nodos_guardados)++;
+	}
+
+}
+
 //////////
 
 abb_t *abb_crear(abb_comparador comparador)
@@ -212,15 +265,6 @@ void *abb_quitar(abb_t *arbol, void *elemento)
 	}
 
 	void *elemento_eliminado= NULL;
-
-	if(arbol->tamanio == 1){
-		if(arbol->comparador(elemento, arbol->nodo_raiz->elemento)== 0){
-			elemento_eliminado= arbol->nodo_raiz->elemento;
-			arbol->nodo_raiz= NULL;
-			arbol->tamanio= 0;
-			return elemento_eliminado;
-		}
-	}
 
 	arbol->nodo_raiz= quitar_nodo_rec(arbol->nodo_raiz, arbol, elemento, &elemento_eliminado);
 
@@ -301,5 +345,26 @@ size_t abb_con_cada_elemento(abb_t *arbol, abb_recorrido recorrido,
 size_t abb_recorrer(abb_t *arbol, abb_recorrido recorrido, void **array,
 		    size_t tamanio_array)
 {
+	if(arbol== NULL || arbol->nodo_raiz== NULL || tamanio_array== 0){
+		return 0;
+	}
+
+	size_t nodos_guardados=0;	
+	
+	if(recorrido == 0){
+		abb_recorrer_inorden(arbol->nodo_raiz, &nodos_guardados, array, tamanio_array);
+		return nodos_guardados;
+	}
+
+	if(recorrido == 1){
+		abb_recorrer_preorden(arbol->nodo_raiz, &nodos_guardados, array, tamanio_array);
+		return nodos_guardados;
+	}
+
+	if(recorrido == 2){
+		abb_recorrer_postorden(arbol->nodo_raiz, &nodos_guardados, array, tamanio_array);
+		return nodos_guardados;
+	}
+	
 	return 0;
 }
