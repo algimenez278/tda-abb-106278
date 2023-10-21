@@ -1,6 +1,6 @@
 # TDA ABB
 
-## Repositorio de (Nombre Apellido) - (Padrón) - (Mail)
+## Repositorio de Abril Luna Gimenez - 106278 - algimenez@fi.uba.ar
 
 - Para compilar:
 
@@ -21,15 +21,12 @@ línea con valgrind
 ---
 ##  Funcionamiento
 
-Explicación de cómo funcionan las estructuras desarrolladas en el TP y el funcionamiento general del mismo.
+El programa desarrolla las funciones necesarias para trabajar con un arbol binario. Crearlo, agregar elementos, buscarlos, quitarlos, etc.
+Permite al usuario conocer el tamanio del arbol, su raiz, si el mismo esta vacio, guardar elementos del mismo en un array y recorrerlo.
+En el archivo `abb.c` la función `abb_crear` utiliza `calloc` para reservar la memoria necesaria para un arbol e inicializar arbol->nodo_raiz y arbol->tamanio.
+El programa luego de usar `calloc` verifica que se haya reservado la memoria correctamente, en caso contrario maneja el error, retornando NULL por ej.
 
-Aclarar en esta parte todas las decisiones que se tomaron al realizar el TP, cosas que no se aclaren en el enunciado, fragmentos de código que necesiten explicación extra, etc.
-
-Incluír **EN TODOS LOS TPS** los diagramas relevantes al problema (mayormente diagramas de memoria para explicar las estructuras, pero se pueden utilizar otros diagramas si es necesario).
-
-### Por ejemplo:
-
-El programa funciona abriendo el archivo pasado como parámetro y leyendolo línea por línea. Por cada línea crea un registro e intenta agregarlo al vector. La función de lectura intenta leer todo el archivo o hasta encontrar el primer error. Devuelve un vector con todos los registros creados.
+La funcion `insertar_nodo_rec` tabaja recursivamente hasta encontrar el lugar correspondiente para el nodo a insertar, según el elemento enviado.
 
 <div align="center">
 <img width="70%" src="img/diagrama1.svg">
