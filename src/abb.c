@@ -120,7 +120,7 @@ void *quitar_nodo_rec(nodo_abb_t *nodo, abb_t *arbol, void *elemento,
 //POST: Devuelve el elemento del nodo que es igual al elemento recibido.
 void *buscar_nodo_rec(nodo_abb_t *nodo_actual, abb_t *arbol, void *elemento)
 {
-	if (arbol == NULL || nodo == NULL) {
+	if (arbol == NULL || nodo_actual == NULL) {
 		return NULL;
 	}
 
@@ -155,7 +155,7 @@ void abb_destruir_nodo(abb_t *arbol, nodo_abb_t *nodo)
 void abb_destruir_todo_nodo(abb_t *arbol, void (*destructor)(void *),
 			    nodo_abb_t *nodo)
 {
-	if (nodo == NULL) {
+	if (arbol == NULL || nodo == NULL) {
 		return;
 	}
 
