@@ -46,14 +46,14 @@ Observación: no puse todos los hijos NULL, solo los necesarios para que me deje
 *Las operaciones básicas del mismo como insertar, quitar y buscar tienen complejidad O(n), n es la cantidad de elementos del árbol. Y dependera mucho de como este organizado el mismo.
 
 <div align="center">
-<img width="70%" src="img/A.PNG">
+<img width="70%" src="img/A.png">
 </div>
 
 Un árbol binario es aquel en el que los nodos como máximo pueden tener dos hijos (uno izquierdo y uno derecho).
 *Las operaciones básicas del mismo como insertar, quitar y buscar tienen complejidad O(log n), n es la cantidad de elementos del árbol.
 
 <div align="center">
-<img width="70%" src="img/AB.PNG">
+<img width="70%" src="img/AB.png">
 </div>
 
 Un árbol binario de búsqueda, además de lo anterior, mantiene una regla específica para el orden de los elementos almacenados, para cada nodo, todos los elementos del subárbol izquierdo son menores que el nodo y todos los elementos del subárbol derecho son mayores 
