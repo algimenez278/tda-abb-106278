@@ -45,11 +45,20 @@ Observación: no puse todos los hijos NULL, solo los necesarios para que me deje
 1)Un árbol es un conjunto de elementos relacionados subordinadamente, ordenados de manera tal que facilita la búsqueda y el acceso a los mismos. Tiene un nodo principal llamado "nodo_raiz" y cada nodo puede tener 0 o más nodos relacionados jerárquicamente.
 *Las operaciones básicas del mismo como insertar, quitar y buscar tienen complejidad O(n), n es la cantidad de elementos del árbol. Y dependera mucho de como este organizado el mismo.
 
+<div align="center">
+<img width="70%" src="img/A.PNG">
+</div>
+
 Un árbol binario es aquel en el que los nodos como máximo pueden tener dos hijos (uno izquierdo y uno derecho).
 *Las operaciones básicas del mismo como insertar, quitar y buscar tienen complejidad O(log n), n es la cantidad de elementos del árbol.
 
+<div align="center">
+<img width="70%" src="img/AB.PNG">
+</div>
+
 Un árbol binario de búsqueda, además de lo anterior, mantiene una regla específica para el orden de los elementos almacenados, para cada nodo, todos los elementos del subárbol izquierdo son menores que el nodo y todos los elementos del subárbol derecho son mayores 
 *Las operaciones básicas del mismo como insertar, quitar y buscar tienen complejidad O(log n), n es la cantidad de elementos del árbol.
+Un ej de ABB se puede observar en el gráfico celeste :)
 
 Para los tres, recorrerlos tiene complejidad O(n), donde n es la cantidad de elementos.
 
