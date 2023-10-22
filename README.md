@@ -47,11 +47,11 @@ En algunos casos evite usar las funciones, para demostrar que entiendo la lógic
 Adjunto 2 graficos del árbol al comienzo y el árbol al finalizar las variadas pruebas.
 
 <div align="center">
-<img width="70%" src="img/abb_comienzo.png">
+<img width="70%" src="img/abb_comienzo.PNG">
 </div>
 
 <div align="center">
-<img width="70%" src="img/abb_final.png">
+<img width="70%" src="img/abb_final.PNG">
 </div>
 
 ---
