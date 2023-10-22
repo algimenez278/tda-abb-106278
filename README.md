@@ -29,6 +29,7 @@ El programa luego de usar `calloc` verifica que se haya reservado la memoria cor
 En el archivo `pruebas_alumno.c` se crea un arbol y se prueban las funciones de `abb.c`
 En algunos casos evite usar las funciones, para demostrar que entiendo la lógica de donde deberian quedar posicionados los elementos.
 Adjunto 2 graficos del árbol al comienzo y el árbol al finalizar las variadas pruebas.
+Observación: no puse todos los hijos NULL, solo los necesarios para que me deje bien acomodados los nodos cuando realicé el diagrama.
 
 <div align="center">
 <img width="70%" src="img/abb_comienzo.PNG">
