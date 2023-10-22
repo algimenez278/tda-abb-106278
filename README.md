@@ -5,18 +5,18 @@
 - Para compilar:
 
 ```bash
-línea de compilación
+make ejemplo
 ```
 
 - Para ejecutar:
 
 ```bash
-línea de ejecución
+./ejemplo
 ```
 
 - Para ejecutar con valgrind:
 ```bash
-línea con valgrind
+make valgrind-chanutron
 ```
 ---
 ##  Funcionamiento
@@ -51,7 +51,7 @@ Adjunto 2 graficos del árbol al comienzo y el árbol al finalizar las variadas 
 </div>
 
 <div align="center">
-<img width="70%" src="img/abb_final.svg">
+<img width="70%" src="img/abb_final.png">
 </div>
 
 ---
